@@ -14,7 +14,7 @@ mongoose.connect(MONGO_URL, {
 })
 
     .then(() => {
-        
+
         console.log("MongoDB connected");
     })
     .catch((error) => {
@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 
-app.use('/api/students', attendanceRoutes); // Ensure this path is correct
+app.use('https://studentattendance-5jge.onrender.com/api/students', attendanceRoutes); // Ensure this path is correct
 setTimeout(() => {
     app.listen(PORT, () => console.log(`Server running on http://127.0.0.1:${PORT}`));
 
