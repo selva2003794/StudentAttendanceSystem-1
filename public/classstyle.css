@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+#classes {
+    width: 90%;
+    height: 90%;
+    background-color: #f1f1f1;
+    margin : 0 auto;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    padding : 10px
+    
+}
+
+#classes .class {
+    width  :50vh;
+    height : 20%;
+    border-radius: 10px;
+    background-color: lightsteelblue;
+    padding : 10px;
+    margin : 10px;
+    text-align: center;
+    
+}
+
+#classes a {
+    text-decoration: none;
+    color: black;
+}

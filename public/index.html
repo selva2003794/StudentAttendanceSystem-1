@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="deptstyle.css">
+    <link rel="stylesheet" href="classstyle.css">
+    <link rel="stylesheet" href="yearstyle.css">
+</head>
+
+<body>
+    <div id="bodyDiv">
+        <div id="main">
+            <div id="loginBox">
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Login here</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="username">UserName:</label></td>
+                        <td><input type="text" id="username"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password">Password:</label></td>
+                        <td><input type="password" id="password"></td>
+                    </tr>
+                    <tr>
+                        <td><button id="loginBtn">Login</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <script>
+            const _UserName = "JACSICE";
+            const _Password = "12345";
+
+            document.getElementById("loginBtn").onclick = () => {
+                const userName = document.getElementById("username");
+                const password = document.getElementById("password");
+                if (userName.value == "" || userName.value == null || password.value == "" || password.value == null) {
+                    window.alert("Enter UserName and Password");
+                }
+
+                else if (userName.value == _UserName && password.value == _Password) {
+                    document.getElementById("bodyDiv").innerHTML = "";
+                    //console.log(document.getElementById("bodyDiv"));
+                    document.getElementById("bodyDiv").innerHTML = `<div id="depts">
+        <a ><div id="cse" class="dept" onclick="showCse()"><h1>CSE</h1></div></a>
+        <a href="ececlass.html"><div id="ece" class="dept"><h1>ECE</h1></div></a>
+        <a href="/mechclass.html"><div id="mech" class="dept"><h1>MECH</h1></div></a>
+        <a href="aiclass.html"><div id="ai" class="dept"><h1>AI</h1></div></a>
+        <a href="itclass.html"> <div id="id" class="dept"><h1>IT</h1></div></a>
+        </div>`;
+                    document.title = "departments";
+
+                    //window.open("dept.html", "_self");
+                }
+                else {
+                    window.alert("invalid username or password");
+                }
+            }
+            function showCse() {
+                document.getElementById("bodyDiv").innerHTML = "";
+                document.getElementById("bodyDiv").innerHTML = `<div id="classes">
+        <a ><div id="1year" class="class" onclick="showCse1()"><h1>1 year</h1></div></a>
+        <a ><div id="2year" class="class" onclick="showCse2()"><h1>2 year</h1></div></a>
+        <a ><div id="3year" class="class" onclick="showCse3()"><h1>3 year</h1></div></a>
+        <a><div id="4year" class="class" onclick="showCse4()"><h1>4 year</h1></div></a>
+       </div>`;
+            }
+            //SHOW CSE1
+            function showCse1() {
+
+                document.getElementById("bodyDiv").innerHTML = "";
+                //console.log(document.getElementById("bodyDiv"));
+                document.getElementById("bodyDiv").innerHTML = `<div id="main1">
+        <button id="reviewBtn">Review</button>
+        <div id="students">
+
+            <div class="student">
+                <img src="student1.jpeg" alt="Aarthese" width="200" height="200">
+                <h2>Name: Aarthese</h2>
+                <p class="rollNo">Roll No: 1</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="student1.jpeg" alt="Aarav" width="200" height="200">
+                <h2>Name: Aarav</h2>
+                <p class="rollNo">Roll No: 2</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+
+        </div>
+    </div>`;
+
+                const presentBtn = document.getElementsByClassName("present");
+                const absentBtn = document.getElementsByClassName("absent");
+
+                const time = new Date();
+                const year = time.getFullYear();
+                const date = time.getDate();
+                const month = time.getMonth();
+                let hours = time.getHours();
+                hours = hours % 12 || 12;
+                const minutes = time.getMinutes();
+
+                Array.from(presentBtn).forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        //event.target.parentElement.getElementsByClassName("absent")[0].innerHTML = "<del>Absent</del>";
+                        event.target.style.display = "none";
+                        event.target.parentElement.getElementsByClassName("absent")[0].style.display = "none";
+                        event.target.parentElement.getElementsByClassName("result")[0].textContent = "Present";
+                        event.target.parentElement.getElementsByClassName("result")[0].style.color = "green";
+
+                        let timeDate = `${date}/${month + 1}/${year} %0a ${hours}:${minutes}`;
+
+                        const rollNo = event.target.parentElement.getElementsByClassName("rollNo")[0].textContent.split(":")[1].trim();
+                        //console.log(rollNo);
+                        //markAttendance(rollNo, "present");
+                        //saveAttendance(name, rollNo.value, "Present", timeDate);
+                        fetchStudentsCount();
+                    });
+                });
+
+                Array.from(absentBtn).forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        //event.target.parentElement.getElementsByClassName("present")[0].innerHTML = "<del>Present</del>";
+                        event.target.style.display = "none";
+                        event.target.parentElement.getElementsByClassName("present")[0].style.display = "none";
+                        event.target.parentElement.getElementsByClassName("result")[0].textContent = "Absent";
+                        event.target.parentElement.getElementsByClassName("result")[0].style.color = "red";
+                        let timeDate = `${date}/${month + 1}/${year} %0a ${hours}:${minutes}`;
+
+                        const rollNo = event.target.parentElement.getElementsByClassName("rollNo")[0].textContent.split(":")[1].trim();
+                        markAttendance(rollNo, "Absent");
+                        //saveAttendance(name, rollNo.value, "Absent", timeDate);
+                        fetchStudentsCount();
+                    });
+                });
+
+                const APIURL = `/api/students`; // If running on the same domain
+
+
+                // Fetch and display the count of students
+                async function fetchStudentsCount() {
+                    try {
+                        const response = await fetch(`${APIURL}/count`);
+                        console.log(response);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        const data = await response.json();
+                        count = data.count;
+                        console.log(`Total students: ${data.count}`);
+                    } catch (error) {
+                        console.error('Error fetching student count:', error);
+                    }
+                }
+
+
+                // Function to mark attendance (Present/Absent)
+                async function markAttendance(rollno, status) {
+                    const date = new Date().toLocaleString();
+                    const historyEntry = `${status} on ${date}`;
+                    const check = await fetch(APIURL);
+                    //console.log(check);
+                    try {
+                        const response = await fetch(`${APIURL}/${3}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ attendance: status, historyEntry })
+                        });
+
+                        //console.log(response.ok);
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            console.log("Attendance updated:", data);
+                            //fetchStudents();
+                        } else {
+                            console.error("Error updating attendance:", data.message);
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                }
+            }
+
+            //SHOW CSE2
+            function showCse2() {
+
+                document.getElementById("bodyDiv").innerHTML = "";
+                //console.log(document.getElementById("bodyDiv"));
+                document.getElementById("bodyDiv").innerHTML = `
+
+        <div id="main1">
+        <button id="shortCut">Put Attendance</button>
+        <button id="reviewBtn">Get Percentage</button>
+        <div id="students" class="allStudents">
+
+            <div class="student">
+                <img src="male.jpg" alt="Aarthese" width="200" height="200">
+                <h2>Name: Aarthese</h2>
+                <p class="rollNo">Roll No: 23104001</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="Abina" width="200" height="200">
+                <h2>Name: Abina</h2>
+                <p class="rollNo">Roll No: 23104002</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Abinaya" width="200" height="200">
+                <h2>Name: Abinaya</h2>
+                <p class="rollNo">Roll No: 23104003</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Abirami" width="200" height="200">
+                <h2>Name: Abirami</h2>
+                <p class="rollNo">Roll No: 23104004</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Abisha" width="200" height="200">
+                <h2>Name: Abisha</h2>
+                <p class="rollNo">Roll No: 23104005</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="AbishaMary" width="200" height="200">
+                <h2>Name: AbishaMary</h2>
+                <p class="rollNo">Roll No: 23104006</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="Abisheka" width="200" height="200">
+                <h2>Name: Abisheka</h2>
+                <p class="rollNo">Roll No: 23104007</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="AkshayaLakshmi" width="200" height="200">
+                <h2>Name: AkshayaLakshmi</h2>
+                <p class="rollNo">Roll No: 23104008</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Arumugavel" width="200" height="200">
+                <h2>Name: Arumugavel</h2>
+                <p class="rollNo">Roll No: 23104009</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Arunkumar" width="200" height="200">
+                <h2>Name: ArunKumar</h2>
+                <p class="rollNo">Roll No: 23104010</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="Ashokraja" width="200" height="200">
+                <h2>Name: Ashokraja</h2>
+                <p class="rollNo">Roll No: 23104011</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="Baras" width="200" height="200">
+                <h2>Name: Baras</h2>
+                <p class="rollNo">Roll No: 23104012</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="BavaniC" width="200" height="200">
+                <h2>Name: BavaniC</h2>
+                <p class="rollNo">Roll No: 23104013</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="BavaniS" width="200" height="200">
+                <h2>Name: BavaniS</h2>
+                <p class="rollNo">Roll No: 23104014</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Bern" width="200" height="200">
+                <h2>Name: Bern</h2>
+                <p class="rollNo">Roll No: 23104015</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="ChinnaThambi" width="200" height="200">
+                <h2>Name: ChinnaThambi</h2>
+                <p class="rollNo">Roll No: 23104016</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="EsakkiSorna" width="200" height="200">
+                <h2>Name: EsakkiSorna</h2>
+                <p class="rollNo">Roll No: 23104017</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="GiftyHepzipal" width="200" height="200">
+                <h2>Name: GiftyHepzipal</h2>
+                <p class="rollNo">Roll No: 23104018</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="HeavencyRose" width="200" height="200">
+                <h2>Name: HeavencyRose</h2>
+                <p class="rollNo">Roll No: 23104019</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="IrudayaJency" width="200" height="200">
+                <h2>Name: IrudayaJency</h2>
+                <p class="rollNo">Roll No: 23104020</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Jensha" width="200" height="200">
+                <h2>Name: Jensha</h2>
+                <p class="rollNo">Roll No: 23104021</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="JesuAgnel" width="200" height="200">
+                <h2>Name: JesuAgnel</h2>
+                <p class="rollNo">Roll No: 23104022</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="JohnImmanuel" width="200" height="200">
+                <h2>Name: JohnImmanuel</h2>
+                <p class="rollNo">Roll No: 23104023</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="JohnRabeeder" width="200" height="200">
+                <h2>Name: JohnRabeender</h2>
+                <p class="rollNo">Roll No: 23104024</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="kamalieswari" width="200" height="200">
+                <h2>Name: Kamalieswari</h2>
+                <p class="rollNo">Roll No: 23104026</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="Karthiga" width="200" height="200">
+                <h2>Name: Karthiga</h2>
+                <p class="rollNo">Roll No: 23104027</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="Keerthana" width="200" height="200">
+                <h2>Name: Keerthana</h2>
+                <p class="rollNo">Roll No: 23104028</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="LingaPabitha" width="200" height="200">
+                <h2>Name: LingaPabitha</h2>
+                <p class="rollNo">Roll No: 23104029</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Mariyappan" width="200" height="200">
+                <h2>Name: Mariyappan</h2>
+                <p class="rollNo">Roll No: 23104030</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="MeehaEbaneser" width="200" height="200">
+                <h2>Name: MeehaEbanesar</h2>
+                <p class="rollNo">Roll No: 23104031</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="MohamedBahrudeen" width="200" height="200">
+                <h2>Name: MohamedBahrudeen</h2>
+                <p class="rollNo">Roll No: 23104032</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="MuthuEsakkiammal" width="200" height="200">
+                <h2>Name: MuthuEsakkiammal</h2>
+                <p class="rollNo">Roll No: 23104033</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Muthukrishnan" width="200" height="200">
+                <h2>Name: Muthukrishnan</h2>
+                <p class="rollNo">Roll No: 23104034</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Pattuperumal" width="200" height="200">
+                <h2>Name: Pattuperumal</h2>
+                <p class="rollNo">Roll No: 23104035</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Pooja" width="200" height="200">
+                <h2>Name: Pooja</h2>
+                <p class="rollNo">Roll No: 23104036</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Priya" width="200" height="200">
+                <h2>Name: Priya</h2>
+                <p class="rollNo">Roll No: 23104037</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="Priyadharshini" width="200" height="200">
+                <h2>Name: Priyadharshini</h2>
+                <p class="rollNo">Roll No: 23104038</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="RajeshKumar" width="200" height="200">
+                <h2>Name: RajeshKumar</h2>
+                <p class="rollNo">Roll No: 23104039</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="RakeshPraveen" width="200" height="200">
+                <h2>Name: RakeshPraveen</h2>
+                <p class="rollNo">Roll No: 23104040</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Sampeter" width="200" height="200">
+                <h2>Name: Sampeter</h2>
+                <p class="rollNo">Roll No: 23104041</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="SanthiyaguSabin" width="200" height="200">
+                <h2>Name: SanthiyaguSabin</h2>
+                <p class="rollNo">Roll No: 23104042</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="SelvaAllsiya" width="200" height="200">
+                <h2>Name: SelvaAllsiya</h2>
+                <p class="rollNo">Roll No: 23104043</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="Selvakumar" width="200" height="200">
+                <h2>Name: Selvakumar</h2>
+                <p class="rollNo">Roll No: 23104044</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="Selvapriya" width="200" height="200">
+                <h2>Name: SelvaPriya</h2>
+                <p class="rollNo">Roll No: 23104045</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="SelvaRathiAshal" width="200" height="200">
+                <h2>Name: SelvaRathiAkshal</h2>
+                <p class="rollNo">Roll No: 23104046</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="SherinSamika" width="200" height="200">
+                <h2>Name: SherinSamika</h2>
+                <p class="rollNo">Roll No: 23104047</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Sipi" width="200" height="200">
+                <h2>Name: Sipi</h2>
+                <p class="rollNo">Roll No: 23104048</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="SriMithuna" width="200" height="200">
+                <h2>Name: SriMithuna</h2>
+                <p class="rollNo">Roll No: 23104050</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="SubashRackshan" width="200" height="200">
+                <h2>Name: SubashRackshan</h2>
+                <p class="rollNo">Roll No: 23104051</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="Suganthi" width="200" height="200">
+                <h2>Name: Suganthi</h2>
+                <p class="rollNo">Roll No: 23104052</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="SuryaKala" width="200" height="200">
+                <h2>Name: SuryaKala</h2>
+                <p class="rollNo">Roll No: 23104053</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Sushmitha" width="200" height="200">
+                <h2>Name: Sushmitha</h2>
+                <p class="rollNo">Roll No: 23104054</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="SuviseshGiftson" width="200" height="200">
+                <h2>Name: SuviseshGiftson</h2>
+                <p class="rollNo">Roll No: 23104055</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                
+                <div class="student">
+                <img src="female.jpg" alt="Swathi" width="200" height="200">
+                <h2>Name: Swathi</h2>
+                <p class="rollNo">Roll No: 23104056</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="female.jpg" alt="SweetyEsther" width="200" height="200">
+                <h2>Name: SweetyEsther</h2>
+                <p class="rollNo">Roll No: 23104057</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="Udhayakumar" width="200" height="200">
+                <h2>Name: Udhayakumar</h2>
+                <p class="rollNo">Roll No: 23104058</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Vignesh" width="200" height="200">
+                <h2>Name: Vignesh</h2>
+                <p class="rollNo">Roll No: 23104059</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="Willingsraja" width="200" height="200">
+                <h2>Name: Willingsraja</h2>
+                <p class="rollNo">Roll No: 23104060</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="Artheeswari" width="200" height="200">
+                <h2>Name: Artheeswari</h2>
+                <p class="rollNo">Roll No: 23104301</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                
+                <div class="student">
+                <img src="male.jpg" alt="Balakrishnan" width="200" height="200">
+                <h2>Name: Balakrishnan</h2>
+                <p class="rollNo">Roll No: 23104302</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="Chinnadurai" width="200" height="200">
+                <h2>Name: Chinnadurai</h2>
+                <p class="rollNo">Roll No: 23104303</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="male.jpg" alt="MohammedMunaf" width="200" height="200">
+                <h2>Name: MohammedMunaf</h2>
+                <p class="rollNo">Roll No: 23104304</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="female.jpg" alt="StellaPersiya" width="200" height="200">
+                <h2>Name: StellaPersiya</h2>
+                <p class="rollNo">Roll No: 23104305</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+                <div class="student">
+                <img src="male.jpg" alt="ObedRajaSingh" width="200" height="200">
+                <h2>Name: ObedRajaSingh</h2>
+                <p class="rollNo">Roll No: 23104701</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+        </div>
+    </div>`;
+
+                const reviewBtn = document.getElementById("reviewBtn");
+                const shortCut = document.getElementById("shortCut");
+
+                const presentBtn = document.getElementsByClassName("present");
+                const absentBtn = document.getElementsByClassName("absent");
+
+                const time = new Date();
+                const year = time.getFullYear();
+                const date = time.getDate();
+                const month = time.getMonth();
+                let hours = time.getHours();
+                hours = hours % 12 || 12;
+                const minutes = time.getMinutes();
+
+                Array.from(presentBtn).forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        //event.target.parentElement.getElementsByClassName("absent")[0].innerHTML = "<del>Absent</del>";
+                        event.target.style.display = "none";
+                        event.target.parentElement.getElementsByClassName("absent")[0].style.display = "none";
+                        event.target.parentElement.getElementsByClassName("result")[0].textContent = "Present";
+                        event.target.parentElement.getElementsByClassName("result")[0].style.color = "green";
+
+                        let timeDate = `${date}/${month + 1}/${year} %0a ${hours}:${minutes}`;
+
+                        const rollNo = event.target.parentElement.getElementsByClassName("rollNo")[0].textContent.split(":")[1].trim();
+                        //console.log(rollNo);
+                        markAttendance(rollNo, "Present");
+                        //saveAttendance(name, rollNo.value, "Present", timeDate);
+                        fetchStudentsCount();
+                    });
+                });
+
+                Array.from(absentBtn).forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        //event.target.parentElement.getElementsByClassName("present")[0].innerHTML = "<del>Present</del>";
+                        event.target.style.display = "none";
+                        event.target.parentElement.getElementsByClassName("present")[0].style.display = "none";
+                        event.target.parentElement.getElementsByClassName("result")[0].textContent = "Absent";
+                        event.target.parentElement.getElementsByClassName("result")[0].style.color = "red";
+                        let timeDate = `${date}/${month + 1}/${year} %0a ${hours}:${minutes}`;
+
+                        const rollNo = event.target.parentElement.getElementsByClassName("rollNo")[0].textContent.split(":")[1].trim();
+
+                        markAttendance(rollNo, "Absent");
+                        //saveAttendance(name, rollNo.value, "Absent", timeDate);
+                        fetchStudentsCount();
+                    });
+                });
+
+                const APIURL = `/api/students`; // If running on the same domain
+                shortCut.onclick = async (event) => {
+                    var format;
+                    var find;
+                    var get;
+                    //var presentArray = ['001','002','003','004' , '005' , '006' , '007' , '008','009','010','011','012','013','014','015','016','017','018','019','020','021','022','023','024','025','026','027','028','029','030','031','032','033','034','035','036','037','038','039','040','' ];
+                    var allButtons = event.target.parentElement.querySelector(".allStudents").children;
+                    //console.log(allButtons);
+
+                    buttonArray = [];
+
+                    for (let i = 0; i < allButtons.length; i++) {
+                        //console.log(allButtons[i].querySelector(".present"));
+                        buttonArray.push(allButtons[i]);
+                    }
+
+                    const AbsentIs = window.prompt("Enter the  Number of Students Absent:");
+
+                    if (AbsentIs == "" || AbsentIs == null) {
+                        window.alert("invalid input");
+                    }
+                    else {
+                        if (AbsentIs > 0) {
+                            for (i = 0; i < AbsentIs; i++) {
+                                const getAbsentIsNumber = window.prompt("Enter the Absent Students Number one-by-one(23104---):");
+                                if (getAbsentIsNumber.startsWith("23104")) {
+                                    format = Number(getAbsentIsNumber);
+                                }
+                                else {
+                                    format = Number(`23104${getAbsentIsNumber}`);
+                                }
+                                //console.log(String(format).slice(5));
+
+                                if (String(format).slice(5).startsWith("0")) {
+                                    find = String(format).slice(6);
+                                    if (String(find).startsWith("0")) {
+                                        get = find.slice(1);
+                                        //console.log(get);
+
+                                        for(let i = 0;i < buttonArray.length;i++) {
+                                            if(buttonArray[i] === buttonArray[get - 1]) {
+                                                buttonArray[i] = "";
+                                                break;
+                                            }
+                                        }
+                                        
+                                        /*let NewArray = buttonArray.filter(button => {
+                                            console.log(button.querySelector(".rollNo").textContent !== buttonArray[get - 1].querySelector(".rollNo").textContent);
+                                        });
+                                        console.log(NewArray);*/
+
+                                        await allButtons[get - 1].querySelector(".absent").click();
+
+                                        //console.log(event.target.parentElement.querySelector(".allStudents").children[get - 1]);
+                                    }
+                                    else if (String(find) >= 10 && String(find) <= 24) {
+                                        console.log(find);
+                                        get = find - 1;
+                                        //console.log(get);
+                                        for(let i = 0;i < buttonArray.length;i++) {
+                                            if(buttonArray[i] === buttonArray[get]) {
+                                                buttonArray[i] = "";
+                                                break;
+                                            }
+                                        }
+                                        
+                                        await allButtons[get].querySelector(".absent").click();
+
+                                        //console.log(event.target.parentElement.querySelector(".allStudents").children[get]);
+                                    }
+                                    else if (String(find) >= 26 && String(find) <= 48) {
+                                        //console.log(find);
+                                        get = find - 2;
+                                        //console.log(get);
+                                        for(let i = 0;i < buttonArray.length;i++) {
+                                            if(buttonArray[i] === buttonArray[get]) {
+                                                buttonArray[i] = "";
+                                                break;
+                                            }
+                                        }
+                                        //console.log(event.target.parentElement.querySelector(".allStudents").children[get]);
+                                        await allButtons[get].querySelector(".absent").click();
+
+                                    }
+                                    else if (String(find) >= 50 && String(find) <= 60) {
+                                        //console.log(find);
+                                        get = find - 3;
+                                        //console.log(get);
+                                        for(let i = 0;i < buttonArray.length;i++) {
+                                            if(buttonArray[i] === buttonArray[get]) {
+                                                buttonArray[i] = "";
+                                                break;
+                                            }
+                                        }
+                                        //console.log(event.target.parentElement.querySelector(".allStudents").children[get]);
+                                        await allButtons[get].querySelector(".absent").click();
+
+                                    }
+                                    else {
+                                        window.alert("There are no students in this number");
+                                    }
+                                }
+                                else if (String(format).slice(5).startsWith("3")) {
+                                    find = String(format).slice(7);
+                                    var late = 57;
+
+                                    get = late + (Number(find));
+                                    //console.log(get);
+                                    for(let i = 0;i < buttonArray.length;i++) {
+                                        if(buttonArray[i] === buttonArray[get]) {
+                                            buttonArray[i] = "";
+                                            break;
+                                        }
+                                    }
+                                    
+                                    //console.log(event.target.parentElement.querySelector(".allStudents").children[get]);
+                                    await allButtons[get].querySelector(".absent").click();
+
+                                }
+                                else if (String(format).slice(5).startsWith("7")) {
+                                    get = 63;
+                                    for(let i = 0;i < buttonArray.length;i++) {
+                                        if(buttonArray[i] === buttonArray[get]) {
+                                            buttonArray[i] = "";
+                                            break;
+                                        }
+                                    }
+                                    
+                                    //console.log(event.target.parentElement.querySelector(".allStudents").children[get]);
+                                    await allButtons[get].querySelector(".absent").click();
+
+                                }
+                                //await markAttendance(format, "Absent");
+                                //console.log(event.target.parentElement.querySelector(".allStudents").children[].querySelectorAll(".rollNo"));
+
+                            }
+                            setTimeout(() => {
+                                presentfunction();
+                            },3000);
+                            
+                        }
+                        else {
+
+                            //allButtons = allButtons.querySelector(".present").filter((button) => button !== event.target.parentElement.getElementsByTagName("h3")[0].textContent);
+
+                            //const allButtons = event.target.parentElement.querySelector(".allStudents").children;
+                            presentFun = async () => {
+                                for (i = 0; i < buttonArray.length; i++) {
+                                    if(buttonArray[i] == "") {
+
+                                    }
+                                    else {
+                                        await buttonArray[i].querySelector(".present").click();
+                                    }
+                                    
+                                }
+                            }
+                            presentFun();
+
+                        }
+                    }
+
+                }
+                presentfunction = async () => {
+                    for (i = 0; i < buttonArray.length; i++) {
+                        if(buttonArray[i] == "") {
+
+                        }
+                        else {
+                            await buttonArray[i].querySelector(".present").click();
+                        }
+                        
+                    }
+                }
+                reviewBtn.onclick = (event) => {
+                    let TWKDYS = window.prompt("Enter the Total working days");
+                    if (TWKDYS == "" || TWKDYS == null || TWKDYS == 0) {
+                        window.alert("invalid input");
+                    }
+                    else {
+                        async function fetchStudentsCount() {
+                            try {
+                                const response = await fetch(`${APIURL}/count`);
+                                console.log(response);
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                const data = await response.json();
+                                COunt = data.count;
+                                console.log(`Total students: ${data.count}`);
+                            } catch (error) {
+                                console.error('Error fetching student count:', error);
+                            }
+                        }
+
+                        async function fetchStudents() {
+
+                            try {
+                                const response = await fetch(APIURL);
+                                const students = await response.json();
+                                console.log(COunt);
+                                //console.log(event.target.parentElement.querySelector(".allStudents").children);
+                                //console.log(event.target.parentElement.querySelectorAll(".student"));
+                                const allStudents = event.target.parentElement.querySelector(".allStudents").children
+                                //console.log(allStudents);
+
+                                console.log(students);
+                                for (let i = 0; i < COunt; i++) {
+                                    console.log(allStudents[i]);
+                                    Newh4 = document.createElement("h4");
+                                    let percentage = ((students[i].attendance / TWKDYS) * 100).toFixed(2);
+                                    //console.log(percentage);
+                                    Newh4.style.color = "blue";
+                                    Newh4.innerHTML = `${students[i].name} Attendance Percentage = ${percentage}%`;
+                                    allStudents[i].append(Newh4);
+                                    //console.log(Newdiv.textContent);
+                                    let RollNo = event.target.parentElement.getElementsByClassName("student")[i].getElementsByClassName("rollNo")[0].textContent.split(":")[1];
+                                    //console.log(RollNo);
+                                    await markAttendance(RollNo, "Reset");
+                                }
+
+                            }
+                            catch (error) {
+                                console.error('Error fetching students:', error);
+                            }
+                        }
+                        fetchStudentsCount();
+                        setTimeout(() => {
+                            fetchStudents();
+                        }, 2000);
+                    }
+
+                }
+
+                // Fetch and display the count of students
+                async function fetchStudentsCount() {
+                    try {
+                        const response = await fetch(`${APIURL}/count`);
+                        console.log(response);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        const data = await response.json();
+                        count = data.count;
+                        console.log(`Total students: ${data.count}`);
+                    } catch (error) {
+                        console.error('Error fetching student count:', error);
+                    }
+                }
+
+
+                // Function to mark attendance (Present/Absent)
+                async function markAttendance(rollno, status) {
+                    const date = new Date().toLocaleString();
+                    let decision = 0;
+                    if (status == "Absent") {
+                        decision = 0;
+                    }
+                    else if (status == "Present") {
+                        decision = 1;
+                    }
+                    else {
+                        decision = 0;
+                    }
+
+                    //const historyDecision = status == "Absent" ? `${status} on ${date}` : "";
+
+                    if (status == "Absent") {
+                        historyDecision = `${status} on ${date}`;
+                    }
+                    else if (status == "Present") {
+                        historyDecision = "";
+                    }
+                    else {
+                        historyDecision = "Reset";
+                    }
+                    //const historyEntry = `${status} on ${date}`;
+                    const check = await fetch(APIURL);
+                    console.log(decision, historyDecision);
+                    try {
+                        const response = await fetch(`${APIURL}/${rollno}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ attendance: decision, historyDecision })
+                        });
+
+                        //console.log(response.ok);
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            console.log("Attendance updated:", data);
+                            //fetchStudents();
+                        } else {
+                            console.error("Error updating attendance:", data.message);
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                }
+            }
+            //SHOW CSE3
+            function showCse3() {
+
+                document.getElementById("bodyDiv").innerHTML = "";
+                //console.log(document.getElementById("bodyDiv"));
+                document.getElementById("bodyDiv").innerHTML = `<div id="main1">
+        <button id="reviewBtn">Review</button>
+        <div id="students">
+
+            <div class="student">
+                <img src="student1.jpeg" alt="Aarthese" width="200" height="200">
+                <h2>Name: Aarthese</h2>
+                <p class="rollNo">Roll No: 1</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="student1.jpeg" alt="Aarav" width="200" height="200">
+                <h2>Name: Aarav</h2>
+                <p class="rollNo">Roll No: 2</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+
+        </div>
+    </div>`;
+
+                const presentBtn = document.getElementsByClassName("present");
+                const absentBtn = document.getElementsByClassName("absent");
+
+                const time = new Date();
+                const year = time.getFullYear();
+                const date = time.getDate();
+                const month = time.getMonth();
+                let hours = time.getHours();
+                hours = hours % 12 || 12;
+                const minutes = time.getMinutes();
+
+                Array.from(presentBtn).forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        //event.target.parentElement.getElementsByClassName("absent")[0].innerHTML = "<del>Absent</del>";
+                        event.target.style.display = "none";
+                        event.target.parentElement.getElementsByClassName("absent")[0].style.display = "none";
+                        event.target.parentElement.getElementsByClassName("result")[0].textContent = "Present";
+                        event.target.parentElement.getElementsByClassName("result")[0].style.color = "green";
+
+                        let timeDate = `${date}/${month + 1}/${year} %0a ${hours}:${minutes}`;
+
+                        const rollNo = event.target.parentElement.getElementsByClassName("rollNo")[0].textContent.split(":")[1].trim();
+                        //console.log(rollNo);
+                        //markAttendance(rollNo, "present");
+                        //saveAttendance(name, rollNo.value, "Present", timeDate);
+                        fetchStudentsCount();
+                    });
+                });
+
+                Array.from(absentBtn).forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        //event.target.parentElement.getElementsByClassName("present")[0].innerHTML = "<del>Present</del>";
+                        event.target.style.display = "none";
+                        event.target.parentElement.getElementsByClassName("present")[0].style.display = "none";
+                        event.target.parentElement.getElementsByClassName("result")[0].textContent = "Absent";
+                        event.target.parentElement.getElementsByClassName("result")[0].style.color = "red";
+                        let timeDate = `${date}/${month + 1}/${year} %0a ${hours}:${minutes}`;
+
+                        const rollNo = event.target.parentElement.getElementsByClassName("rollNo")[0].textContent.split(":")[1].trim();
+                        markAttendance(rollNo, "Absent");
+                        //saveAttendance(name, rollNo.value, "Absent", timeDate);
+                        fetchStudentsCount();
+                    });
+                });
+
+                const APIURL = `/api/students`; // If running on the same domain
+
+
+                // Fetch and display the count of students
+                async function fetchStudentsCount() {
+                    try {
+                        const response = await fetch(`${APIURL}/count`);
+                        console.log(response);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        const data = await response.json();
+                        count = data.count;
+                        console.log(`Total students: ${data.count}`);
+                    } catch (error) {
+                        console.error('Error fetching student count:', error);
+                    }
+                }
+
+
+                // Function to mark attendance (Present/Absent)
+                async function markAttendance(rollno, status) {
+                    const date = new Date().toLocaleString();
+                    const historyEntry = `${status} on ${date}`;
+                    const check = await fetch(APIURL);
+                    console.log(check);
+                    try {
+                        const response = await fetch(`${APIURL}/${3}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ attendance: status, historyEntry })
+                        });
+
+                        console.log(response.ok);
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            console.log("Attendance updated:", data);
+                            //fetchStudents();
+                        } else {
+                            console.error("Error updating attendance:", data.message);
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                }
+            }
+
+            //SHOW CSE4
+            function showCse4() {
+
+                document.getElementById("bodyDiv").innerHTML = "";
+                //console.log(document.getElementById("bodyDiv"));
+                document.getElementById("bodyDiv").innerHTML = `<div id="main1">
+        <button id="reviewBtn">Review</button>
+        <div id="students">
+
+            <div class="student">
+                <img src="student1.jpeg" alt="Aarthese" width="200" height="200">
+                <h2>Name: Aarthese</h2>
+                <p class="rollNo">Roll No: 1</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+            <div class="student">
+                <img src="student1.jpeg" alt="Aarav" width="200" height="200">
+                <h2>Name: Aarav</h2>
+                <p class="rollNo">Roll No: 2</p>
+                <button class="present">Present</button>
+                <button class="absent">Absent</button>
+                <p class="result"></p>
+            </div>
+
+        </div>
+    </div>`;
+
+                const presentBtn = document.getElementsByClassName("present");
+                const absentBtn = document.getElementsByClassName("absent");
+
+                const time = new Date();
+                const year = time.getFullYear();
+                const date = time.getDate();
+                const month = time.getMonth();
+                let hours = time.getHours();
+                hours = hours % 12 || 12;
+                const minutes = time.getMinutes();
+
+                Array.from(presentBtn).forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        //event.target.parentElement.getElementsByClassName("absent")[0].innerHTML = "<del>Absent</del>";
+                        event.target.style.display = "none";
+                        event.target.parentElement.getElementsByClassName("absent")[0].style.display = "none";
+                        event.target.parentElement.getElementsByClassName("result")[0].textContent = "Present";
+                        event.target.parentElement.getElementsByClassName("result")[0].style.color = "green";
+
+                        let timeDate = `${date}/${month + 1}/${year} %0a ${hours}:${minutes}`;
+
+                        const rollNo = event.target.parentElement.getElementsByClassName("rollNo")[0].textContent.split(":")[1].trim();
+                        //console.log(rollNo);
+                        //markAttendance(rollNo, "present");
+                        //saveAttendance(name, rollNo.value, "Present", timeDate);
+                        fetchStudentsCount();
+                    });
+                });
+
+                Array.from(absentBtn).forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        //event.target.parentElement.getElementsByClassName("present")[0].innerHTML = "<del>Present</del>";
+                        event.target.style.display = "none";
+                        event.target.parentElement.getElementsByClassName("present")[0].style.display = "none";
+                        event.target.parentElement.getElementsByClassName("result")[0].textContent = "Absent";
+                        event.target.parentElement.getElementsByClassName("result")[0].style.color = "red";
+                        let timeDate = `${date}/${month + 1}/${year} %0a ${hours}:${minutes}`;
+
+                        const rollNo = event.target.parentElement.getElementsByClassName("rollNo")[0].textContent.split(":")[1].trim();
+                        markAttendance(rollNo, "Absent");
+                        //saveAttendance(name, rollNo.value, "Absent", timeDate);
+                        fetchStudentsCount();
+                    });
+                });
+
+                const APIURL = `/api/students`; // If running on the same domain
+
+
+                // Fetch and display the count of students
+                async function fetchStudentsCount() {
+                    try {
+                        const response = await fetch(`${APIURL}/count`);
+                        console.log(response);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        const data = await response.json();
+                        count = data.count;
+                        console.log(`Total students: ${data.count}`);
+                    } catch (error) {
+                        console.error('Error fetching student count:', error);
+                    }
+                }
+
+
+                // Function to mark attendance (Present/Absent)
+                async function markAttendance(rollno, status) {
+                    const date = new Date().toLocaleString();
+                    const historyEntry = `${status} on ${date}`;
+                    const check = await fetch(APIURL);
+                    console.log(check);
+                    try {
+                        const response = await fetch(`${APIURL}/${3}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ attendance: status, historyEntry })
+                        });
+
+                        console.log(response.ok);
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            console.log("Attendance updated:", data);
+                            //fetchStudents();
+                        } else {
+                            console.error("Error updating attendance:", data.message);
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                }
+            }
+        </script>
+
+</body>
+
+</html>

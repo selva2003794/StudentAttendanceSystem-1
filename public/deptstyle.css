@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+#depts {
+    min-width: 90%;
+    min-height: 90%;
+    width : auto;
+    height: auto;
+    background-color: #f1f1f1;
+    margin : 0 auto;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    padding: 20px;
+    
+}
+
+#depts .dept {
+    width  :50vh;
+    height : 20%;
+    border-radius: 10px;
+    background-color: lightsteelblue;
+    padding : 10px;
+    margin : 10px;
+    text-align: center;
+    
+}
+
+#depts a {
+    text-decoration: none;
+    color: black;
+}

@@ -1,0 +1,186 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+}
+#main1 {
+    min-width : 100%;
+    min-height: 100%;
+    width : auto;
+    height : auto;
+    text-align: center;
+
+}
+#students {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.student {
+    min-width  :60%;
+    min-height : 300px;
+    width : auto;
+    height : auto;
+    border-radius: 10px;
+    background-color: lightsteelblue;
+    padding : 10px;
+    margin : 10px;
+    text-align: center;
+    margin-top: 30px;
+    padding : 10px;
+}
+
+.student img,h2,p,button {
+    display : block;
+    text-align: center;
+    margin : auto;
+    margin-top : 10px;
+}
+.student img {
+    border-radius: 10px;
+}
+
+.student button {
+    padding : 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border : none;
+    border-radius : 10px;
+    cursor : pointer;
+    color : rgb(0, 0, 0);
+}
+
+.student .present {
+    background-color :rgb(24, 234, 24);
+
+}
+.student .absent {
+    background-color :rgb(234, 24, 24);
+
+}
+
+.student p {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#main1 #reviewBtn {
+    padding : 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border : none;
+    border-radius : 10px;
+    cursor : pointer;
+    color : white;
+    margin-top : 10px; 
+    background-color: aqua;
+}
+
+#addDiv {
+    width : 100%;
+    position: absolute;
+    
+}
+
+#addDiv button {
+    position : fixed;
+    top : 80%;
+    padding: 15px;
+    margin-left : 85%;
+    margin-bottom : 10px;
+    font-size: 2.2em;
+    font-weight: bold;
+    background-color: rgb(5, 209, 255);
+    border : none;
+    border-radius : 100%;
+    color : white;
+
+}
+
+#mainpopup {
+    min-width: 100%;
+    min-height :1000vh;
+    width : auto;
+    height : auto;
+    position: absolute;
+    opacity : .9;
+    text-align: center;
+    background-color: black;
+    z-index: 5;
+    display: none;
+}
+.display {
+    display: block;
+}
+
+#popup {
+    text-align: center;
+    width : 300px;
+    height: 240px;
+    background-color: white;
+    position: sticky;
+    top:100px;
+    margin: auto;
+    border-radius: 10px;
+    font-size: 1.3em;
+    font-weight: bolder;
+
+
+}
+
+#popup input {
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin : 10px; 
+    border:2px solid black;
+    text-align: center;
+    width : 80%;
+
+}
+
+.PBtn {
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    padding : 8px;
+    margin : auto;
+    margin-top:10px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    
+}
+
+#saveBtn {
+    background-color: hsl(120, 100%, 50%);
+
+}
+#cancelBtn {
+    background-color: red;
+
+}
+
+.student .result {
+    font-size: 1.5em;
+    font-weight: bold;
+
+}
+
+#shortCut {
+    font-size: 1.2em;
+    background-color:hsl(309, 100%, 51%);
+    color:white;
+    text-align: center;
+    padding:8px;
+    border:none;
+    margin:auto;
+    border-radius: 10px;
+    margin-top:20px;
+}
