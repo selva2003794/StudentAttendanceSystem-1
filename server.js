@@ -5,8 +5,8 @@ const attendanceRoutes = require('./routes/attendanceRoutes'); // Ensure this pa
 
 const app = express();
 const PORT = 5500;
-
-const MONGO_URL = `mongodb+srv://selva91823:l6fNWkCXodkXf0Jp@cluster0.sxbcw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const MONGO_URL = `mongodb+srv://selva91823:Attendance@cluster0.sxbcw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+//const MONGO_URL = `mongodb+srv://selva91823:l6fNWkCXodkXf0Jp@cluster0.sxbcw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Connect to MongoDB
 mongoose.connect(MONGO_URL, {
