@@ -182,5 +182,6 @@ body {
     border:none;
     margin:auto;
     border-radius: 10px;
-    margin-top:20px;
+    margin-top:5%;
+    font-weight: bold;
 }
